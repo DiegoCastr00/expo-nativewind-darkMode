@@ -1,39 +1,49 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+import { Stack } from "expo-router";
+import { useColorScheme } from "nativewind";
+import { View } from "react-native";
+import "../global.css";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  const { colorScheme } = useColorScheme();
+  const isDarkMode = colorScheme === "dark";
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
+  const statusBarColor = isDarkMode ? "#171717" : "#ffffff";
+  const statusBarStyle = isDarkMode ? "light" : "dark";
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
+    <View className={`flex-1 ${isDarkMode ? "bg-neutral-900" : "bg-white"}`}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: {
+            backgroundColor: isDarkMode ? "#171717" : "#ffffff",
+          },
+          statusBarBackgroundColor: statusBarColor,
+          statusBarStyle: statusBarStyle,
+          statusBarHidden: false,
+          statusBarTranslucent: false,
+        }}
+      >
+        <Stack.Screen
+          name="index"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="login"
+          options={{
+            headerShown: true,
+            headerBackTitle: "Volver",
+            headerStyle: {
+              backgroundColor: isDarkMode ? "#171717" : "#ffffff",
+            },
+            headerTintColor: isDarkMode ? "#ffffff" : "#000000",
+            statusBarBackgroundColor: isDarkMode ? "#171717" : "#ffffff",
+            statusBarStyle: statusBarStyle,
+          }}
+        />
       </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    </View>
   );
 }
