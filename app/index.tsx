@@ -1,7 +1,7 @@
 import { colorScheme, useColorScheme } from "nativewind";
 import { Pressable, Switch, Text, View } from "react-native";
 import { Link } from "expo-router";
-import ThemeSelector from "./themeSelector";
+import ThemeSelector from "../src/themeSelector";
 
 export default function Index() {
   return (
